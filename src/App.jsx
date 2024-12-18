@@ -15,9 +15,9 @@ function App() {
           <Route
             path="/admin/Routines"
             element={
-              // <PrivateRoute>
+              <PrivateRoute>
                 <AdminRoutines />
-              // </PrivateRoute>
+              </PrivateRoute>
             }
           />
         </Routes>
