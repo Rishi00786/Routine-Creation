@@ -1,3 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Lexend:wght@100..900&family=Molengo&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Lexend:wght@100..900&family=Mina:wght@400;700&family=Molengo&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Kumbh+Sans:wght@100..900&family=Lexend:wght@100..900&family=Mina:wght@400;700&family=Molengo&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.main1 {
+    font-family: "Kumbh Sans", serif;
+    font-style: normal;
+}
+
+.main2 {
+    font-family: "Mina", serif;
+    font-style: normal;
+}
+
+.main3 {
+    font-family: "Molengo", serif;
+    font-style: normal;
+}
+
+.main4 {
+    font-family: "Lexend", serif;
+    font-style: normal;
+}

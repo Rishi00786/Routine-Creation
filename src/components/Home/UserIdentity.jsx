@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IoArrowBackCircle } from "react-icons/io5";
+import { useStateContext } from "../../../context";
 
 const UserIdentity = () => {
-  const [isAdmin, setIsAdmin] = useState(false);
+
+  const { isAdmin, setIsAdmin } = useStateContext();
+
   const [choiceMade, setChoiceMade] = useState(false);
   const [adminId, setAdminId] = useState("");
   const [adminPass, setAdminPass] = useState("");
@@ -37,14 +40,15 @@ const UserIdentity = () => {
 
     if (adminId === envAdminId && adminPass === envAdminPass) {
       navigate("/admin/Routines");
+      // console.log(isAdmin);
     } else {
       alert("Invalid Admin ID or Password");
     }
   };
 
   return (
-    <div className="w-screen h-screen bg-gradient-to-br from-blue-50 to-slate-100 flex items-center justify-center">
-      {!choiceMade && (
+    <div className="w-screen h-screen bg-slate-200 flex items-center justify-center">
+      {!choiceMade && !isAdmin && (
         <div className="w-4/5 sm:w-2/3 lg:w-1/3 h-2/5 sm:h-2/4 bg-white rounded-lg shadow-lg flex flex-col items-center justify-center space-y-8 p-8">
           <div className="text-2xl sm:text-4xl font-semibold text-gray-800 font-mono">
             Who are you?
