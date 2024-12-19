@@ -16,18 +16,18 @@ function App() {
           <Route
             path="/admin/Routines"
             element={
-              // <PrivateRoute>
+              <PrivateRoute>
               <AdminRoutines />
-              // </PrivateRoute>
+              </PrivateRoute>
             }
           />
 
           <Route
             path="/admin/routines/:id"
             element={
-              // <PrivateRoute>
+              <PrivateRoute>
               <RoutineDetails />
-              // </PrivateRoute>
+              </PrivateRoute>
             }
           /> {/* Dynamic Route */}
         </Routes>
