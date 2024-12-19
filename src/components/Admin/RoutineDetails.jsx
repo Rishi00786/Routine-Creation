@@ -9,7 +9,10 @@ const RoutineDetails = () => {
     useEffect(() => {
         const fetchRoutine = async () => {
             try {
-                const api_url = `http://localhost:3000/routines/${id}`;
+
+                const api = import.meta.env.VITE_API_URL
+                // const api_url = `http://localhost:3000/routines/${id}`;
+                const api_url = `${api}/routines/${id}`;
                 const response = await fetch(api_url, {
                     method: "GET",
                 });
