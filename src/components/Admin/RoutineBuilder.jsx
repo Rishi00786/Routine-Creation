@@ -62,12 +62,23 @@ const RoutineBuilder = () => {
   };
 
   const addStep = () => {
-    setRoutineData({ ...routineData, steps: [...routineData.steps, ""] });
+    const newStep = {
+      description: "",
+      product: {
+        "product-name": "",
+        "product-desc": "",
+      },
+    };
+
+    setRoutineData((prevData) => ({
+      ...prevData,
+      steps: [...prevData.steps, newStep],
+    }));
   };
 
 
   const handleSubmit = async () => {
-    console.log("Routine Data to be sent:", routineData);
+    // console.log("Routine Data to be sent:", routineData);
 
     try {
 
@@ -90,7 +101,7 @@ const RoutineBuilder = () => {
       }
 
       const data = await response.json();
-      console.log("Routine created successfully in DATABASE:", data);
+      // console.log("Routine created successfully in DATABASE:", data);
       setYourRoutines([...yourRoutines, data]);
 
       // Optionally, reset form or give feedback to the user

@@ -35,8 +35,8 @@ const UserIdentity = () => {
     const envAdminPass = import.meta.env.VITE_ADMIN_PASS;
 
 
-    console.log(import.meta.env)
-    console.log(envAdminId, envAdminPass, adminId, adminPass)
+    // console.log(import.meta.env)
+    // console.log(envAdminId, envAdminPass, adminId, adminPass)
 
     if (adminId === envAdminId && adminPass === envAdminPass) {
       navigate("/admin/Routines");

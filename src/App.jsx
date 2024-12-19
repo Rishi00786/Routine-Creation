@@ -1,18 +1,55 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import UserIdentity from "./components/Home/UserIdentity";
-import Routines from "./components/Custom/Routines";
 import AdminRoutines from "./components/Admin/AdminRoutines";
 import PrivateRoute from "../PrivateRoute";
 import RoutineDetails from "./components/Admin/RoutineDetails";
+import { useEffect } from "react";
+import { useStateContext } from "../context";
+import CustomerRoutines from "./components/Custom/CustomerRoutines";
 
 function App() {
+
+  const { setYourRoutines, setPreBuiltRoutines, setAllRoutines } = useStateContext()
+
+  useEffect(() => {
+    const fetchRoutines = async () => {
+      try {
+
+        const api = import.meta.env.VITE_API_URL
+        // const api_url = 'http://localhost:3000/routines';
+        const api_url = `${api}/routines`;
+
+        const response = await fetch(api_url);
+
+        if (!response.ok) {
+          const errorData = await response.json(); // Read the error response if available
+          throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorData.message || 'Unknown error'}`);
+        }
+
+        const data = await response.json()
+        // console.log("Fetched routines from DATABASE:", data);
+        const yourRoutines = data.filter(routine => routine.preBuilt === false);
+        const preBuiltRoutines = data.filter(routine => routine.preBuilt === true);
+        
+        setYourRoutines(yourRoutines);
+        setPreBuiltRoutines(preBuiltRoutines);
+        setAllRoutines(data)
+        // console.log("yourRoutines.length",yourRoutines.length)
+        // console.log("preBuiltRoutines.length", preBuiltRoutines.length)
+      } catch (error) {
+        console.error("Error fetching the routines from DATABASE", error)
+      }
+    }
+
+    fetchRoutines();
+  }, [setAllRoutines, setPreBuiltRoutines, setYourRoutines])
 
   return (
     <BrowserRouter>
       <div className="w-[100vw] h-[100vh]">
         <Routes>
           <Route path="/" element={<UserIdentity />} />
-          <Route path="/routines" element={<Routines />} />
+          <Route path="/routines" element={<CustomerRoutines />} />
           <Route
             path="/admin/Routines"
             element={
