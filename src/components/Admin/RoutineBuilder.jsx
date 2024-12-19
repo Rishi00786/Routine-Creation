@@ -2,17 +2,25 @@ import { useState } from "react";
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 import { MdOutlineCheckCircle } from "react-icons/md";
 import { AiOutlinePlusCircle } from "react-icons/ai"; // Added for + icon
+import { useStateContext } from "../../../context";
 
 const RoutineBuilder = () => {
+
+  const { setYourRoutines, yourRoutines } = useStateContext()
   const [step, setStep] = useState(1);
   const [routineData, setRoutineData] = useState({
     name: "",
     duration: "",
     description: "",
     milestones: "",
-    steps: ["", "", "", "", ""],
+    steps: [
+      { description: "", product: { "product-name": "", "product-desc": "" } },
+      { description: "", product: { "product-name": "", "product-desc": "" } },
+      { description: "", product: { "product-name": "", "product-desc": "" } },
+      { description: "", product: { "product-name": "", "product-desc": "" } },
+      { description: "", product: { "product-name": "", "product-desc": "" } },
+    ],
     benefits: [],
-    image: null,
     imagePreview: null,
   });
 
@@ -25,21 +33,31 @@ const RoutineBuilder = () => {
   };
 
   const handleChange = (e, index, type) => {
+
     const { name, value } = e.target;
 
     if (type === "steps") {
-      // Handle dynamic steps input change
+
       const updatedSteps = [...routineData.steps];
-      updatedSteps[index] = value;
+      if (name === "description") {
+        updatedSteps[index].description = value;
+      } else if (name === "product-name") {
+        updatedSteps[index].product["product-name"] = value;
+      } else if (name === "product-desc") {
+        updatedSteps[index].product["product-desc"] = value;
+      }
       setRoutineData({ ...routineData, steps: updatedSteps });
+
     } else if (type === "benefits") {
-      // Handle weekly benefits input change
+
       const updatedBenefits = [...routineData.benefits];
       updatedBenefits[index] = value;
       setRoutineData({ ...routineData, benefits: updatedBenefits });
+
     } else {
-      // Handle other fields (name, duration, description, milestones, etc.)
+
       setRoutineData({ ...routineData, [name]: value });
+
     }
   };
 
@@ -47,24 +65,70 @@ const RoutineBuilder = () => {
     setRoutineData({ ...routineData, steps: [...routineData.steps, ""] });
   };
 
-  const handleSubmit = () => {
-    console.log("Routine Created:", routineData);
+
+  const handleSubmit = async () => {
+    console.log("Routine Data to be sent:", routineData);
+
+    try {
+      const api_url = 'http://localhost:3000/routines';
+
+      const response = await fetch(api_url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(routineData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json(); // Read the error response if available
+        throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorData.message || 'Unknown error'}`);
+      }
+
+      const data = await response.json();
+      console.log("Routine created successfully in DATABASE:", data);
+      setYourRoutines([...yourRoutines, data]);
+
+      // Optionally, reset form or give feedback to the user
+      // resetForm(); // If you have a resetForm function or a way to clear the form state
+      // alert('Routine created successfully!'); // Provide user feedback
+
+    } catch (error) {
+      console.error("Error creating POST request ROUTINE:", error);
+    }
   };
+
 
   const updateMilestone = (milestone) => {
     setRoutineData({ ...routineData, milestones: milestone });
   };
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const previewURL = URL.createObjectURL(file);
-      setRoutineData({ ...routineData, image: file, imagePreview: previewURL });
-    }
+    if (!file) return;
+
+    // console.log("file uploaded: ",file);
+
+    const cloud_name = import.meta.env.VITE_CLOUD_NAME
+    const data = new FormData()
+    data.append('file', file);
+    data.append('upload_preset', "routine-creation")
+    data.append('cloud_name', cloud_name)
+
+    const base_url = `https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`
+
+    const response = await fetch(base_url, {
+      method: 'POST',
+      body: data
+    })
+
+    const uploadedImageURL = await response.json()
+    // console.log("Uploaded Image URL: ", uploadedImageURL.url);
+    setRoutineData({ ...routineData, imagePreview: uploadedImageURL.url });
   };
 
   return (
-    <div className="w-[90vw] sm:w-[50vw] h-auto max-h-[80vh] my-8 bg-gray-200 rounded-xl p-8 shadow-xl border border-black absolute z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 overflow-y-auto">
+    <div className="w-[90vw] sm:w-[60vw] h-auto max-h-[80vh] my-8 bg-gray-200 rounded-xl p-8 shadow-xl border border-black absolute z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 overflow-y-auto">
       <h1 className="text-3xl font-extrabold text-gray-700 mb-6 text-center main4">
         Routine Builder
       </h1>
@@ -152,17 +216,45 @@ const RoutineBuilder = () => {
             Describe steps for your routine:
           </div>
           {routineData.steps.map((step, index) => (
-            <div key={index}>
-              <label className="block mb-2 text-gray-600 font-semibold main2 mt-4">
-                Step-{index + 1}:
-              </label>
-              <textarea
-                name="description"
-                value={step}
-                onChange={(e) => handleChange(e, index, "steps")}
-                placeholder={`Describe step ${index + 1}`}
-                className="w-full shadow-xl p-3 border border-zinc-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-zinc-800"
-              />
+            <div key={index} className="flex flex-col items-center justify-center gap-2">
+              <div className="flex flex-col items-start justify-center w-full">
+                <label className="block mb-2 text-gray-600 font-semibold main2 mt-4">
+                  Step-{index + 1}:
+                </label>
+                <textarea
+                  name="description"
+                  value={step.description}
+                  onChange={(e) => handleChange(e, index, "steps")}
+                  placeholder={`Describe step ${index + 1}`}
+                  className="w-full shadow-xl p-3 border border-zinc-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-zinc-800"
+                />
+              </div>
+              <div className="flex items-center justify-center gap-4 w-full">
+                <div className="flex flex-col items-start justify-center w-1/3">
+                  <label className="block mb-2 text-gray-600 font-semibold main2 mt-4">
+                    Product Name for this Step:
+                  </label>
+                  <input
+                    name="product-name"
+                    value={step.product["product-name"]}
+                    onChange={(e) => handleChange(e, index, "steps")}
+                    placeholder={`Product Name for this Step`}
+                    className="w-full shadow-xl p-3 border border-zinc-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-zinc-800"
+                  />
+                </div>
+                <div className="flex flex-col items-start justify-center w-2/3">
+                  <label className="block mb-2 text-gray-600 font-semibold main2 mt-4">
+                    How to use it:
+                  </label>
+                  <input
+                    name="product-desc"
+                    value={step.product["product-desc"]}
+                    onChange={(e) => handleChange(e, index, "steps")}
+                    placeholder={`Explained Product Description for this Step`}
+                    className="w-full shadow-xl p-3 border border-zinc-800 rounded-lg focus:outline-none focus:ring-1 focus:ring-zinc-800"
+                  />
+                </div>
+              </div>
             </div>
           ))}
           <div
@@ -173,6 +265,7 @@ const RoutineBuilder = () => {
           </div>
         </div>
       )}
+
 
       {/* Weekly Benefits */}
       {step === 6 && (

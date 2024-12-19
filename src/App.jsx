@@ -3,6 +3,7 @@ import UserIdentity from "./components/Home/UserIdentity";
 import Routines from "./components/Custom/Routines";
 import AdminRoutines from "./components/Admin/AdminRoutines";
 import PrivateRoute from "../PrivateRoute";
+import RoutineDetails from "./components/Admin/RoutineDetails";
 
 function App() {
 
@@ -15,14 +16,23 @@ function App() {
           <Route
             path="/admin/Routines"
             element={
-              <PrivateRoute>
-                <AdminRoutines />
-              </PrivateRoute>
+              // <PrivateRoute>
+              <AdminRoutines />
+              // </PrivateRoute>
             }
           />
+
+          <Route
+            path="/admin/routines/:id"
+            element={
+              // <PrivateRoute>
+              <RoutineDetails />
+              // </PrivateRoute>
+            }
+          /> {/* Dynamic Route */}
         </Routes>
       </div>
-    </BrowserRouter>
+    </BrowserRouter >
   );
 }
 
