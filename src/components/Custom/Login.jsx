@@ -17,7 +17,8 @@ const Login = () => {
             });
             const data = await response.json();
             // console.log(data);
-            // const access_token = data.access_token
+            const access_token = data.access_token
+            localStorage.setItem('access_token', access_token);
             if (response.ok) {
                 alert(data.message);
                 navigate('/routines');

@@ -2,10 +2,14 @@ import RoutineSidebar from "./RoutineSidebar"
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { LuBadgeCent } from "react-icons/lu";
+import { useStateContext } from "../../../context";
+import { FaCheckCircle } from 'react-icons/fa'; // Import check icon
 
 const RoutineDetails = () => {
     const { id } = useParams();
     const [routine, setRoutine] = useState({});
+    const { isAdmin } = useStateContext()
+    const [completedTasks, setCompletedTasks] = useState({});
 
     useEffect(() => {
         const fetchRoutine = async () => {
@@ -35,6 +39,20 @@ const RoutineDetails = () => {
     if (!routine || Object.keys(routine).length === 0) {
         return <div>Loading...</div>; // Wait for the data to load
     }
+
+    const handleCompletedWeekTask = (index) => () => {
+        for (let i = 0; i < index; i++) {
+          if (!completedTasks[i]) {
+            alert('Please complete all previous tasks first!');
+            return;
+          }
+        }
+    
+        setCompletedTasks((prev) => ({
+          ...prev,
+          [index]: !prev[index],
+        }));
+      };
 
     return (
         <div className="bg-slate-200 w-[100vw] h-auto flex items-start justify-start p-4">
@@ -76,27 +94,38 @@ const RoutineDetails = () => {
                                             <p className="text-xl font-medium text-gray-800">{benefit}</p>
                                         </li>
                                         {/* Completed Button for each week */}
-                                        <div className="flex justify-between items-center w-full">
-                                            <button
-                                                className="px-6 py-2 bg-purple-600 text-white text-xl font-semibold rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition-all"
-                                            >
-                                                Completed
-                                            </button>
+                                        {!isAdmin && (
+                                            <div className="flex justify-between items-center w-full mt-4">
+                                                {/* Completed Button */}
+                                                <button
+                                                    onClick={handleCompletedWeekTask(index)}
+                                                    className={`px-6 py-2 text-xl font-semibold rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition-all ${completedTasks[index]
+                                                            ? 'bg-green-600 hover:bg-green-700 text-white'
+                                                            : 'bg-purple-600 hover:bg-purple-700 text-white'
+                                                        }`}
+                                                >
+                                                    {completedTasks[index] ? 'You have done' : 'Completed'}
+                                                </button>
 
-                                            {/* Show milestones after every 2 weeks if bi-weekly */}
-                                            {routine.milestones === 'Bi-Weekly' ? (index + 1) % 2 === 0 && (
-                                                <div className="flex items-center space-x-2">
-                                                    <LuBadgeCent className="text-green-500 text-2xl" />
-                                                    <span className="text-lg text-gray-800 font-medium">Milestone</span>
-                                                </div>
-                                            ) : (
-                                                // Show milestones after every 1 week if weekly
-                                                <div className="flex items-center space-x-2">
-                                                    <LuBadgeCent className="text-green-500 text-3xl" />
-                                                    <span className="text-xl text-gray-800 font-semibold">Milestone </span>
-                                                </div>
-                                            )}
-                                        </div>
+                                                {/* Milestones */}
+                                                {(routine.milestones === 'Bi-Weekly' ? (index + 1) % 2 === 0 : true) && (
+                                                    <div className="flex items-center space-x-2">
+                                                        {completedTasks[index] ? (
+                                                            <>
+                                                                <FaCheckCircle className="text-green-500 text-2xl" />
+                                                                <span className="text-lg text-gray-800 font-medium">Milestone achieved</span>
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <LuBadgeCent className="text-yellow-500 text-2xl" />
+                                                                <span className="text-lg text-gray-800 font-medium">Milestone pending</span>
+                                                            </>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+
 
                                     </div>
                                 ))}
