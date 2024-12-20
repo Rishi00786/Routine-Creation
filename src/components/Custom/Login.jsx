@@ -8,8 +8,8 @@ const Login = () => {
 
     const handleLogin = async () => {
         try {
-
-            const api_url = 'http://localhost:3000'
+            const api_url = import.meta.env.VITE_API_URL
+            // const api_url = 'http://localhost:3000'
             const response = await fetch(`${api_url}/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
