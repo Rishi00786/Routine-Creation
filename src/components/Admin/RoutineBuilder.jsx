@@ -82,10 +82,10 @@ const RoutineBuilder = () => {
 
     try {
 
-      const api = import.meta.env.VITE_API_URL
+      // const api = import.meta.env.VITE_API_URL
 
-      // const api_url = 'http://localhost:3000/routines';
-      const api_url = `${api}/routines`;
+      const api_url = 'http://localhost:3000/routines';
+      // const api_url = `${api}/routines`;
 
       const response = await fetch(api_url, {
         method: 'POST',

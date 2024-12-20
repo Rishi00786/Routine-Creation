@@ -13,7 +13,7 @@ const UserIdentity = () => {
   const navigate = useNavigate();
 
   const handleCustomerClick = () => {
-    navigate("/routines");
+    navigate("/user/signup");
   };
 
   const handleAdminClick = () => {

@@ -1,11 +1,13 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import UserIdentity from "./components/Home/UserIdentity";
 import AdminRoutines from "./components/Admin/AdminRoutines";
-import PrivateRoute from "../PrivateRoute";
+// import PrivateRoute from "../PrivateRoute";
 import RoutineDetails from "./components/Admin/RoutineDetails";
 import { useEffect } from "react";
 import { useStateContext } from "../context";
 import CustomerRoutines from "./components/Custom/CustomerRoutines";
+import Signup from "./components/Custom/Signup";
+import Login from "./components/Custom/Login";
 
 function App() {
 
@@ -15,9 +17,9 @@ function App() {
     const fetchRoutines = async () => {
       try {
 
-        const api = import.meta.env.VITE_API_URL
-        // const api_url = 'http://localhost:3000/routines';
-        const api_url = `${api}/routines`;
+        // const api = import.meta.env.VITE_API_URL
+        const api_url = 'http://localhost:3000/routines';
+        // const api_url = `${api}/routines`;
 
         const response = await fetch(api_url);
 
@@ -49,22 +51,24 @@ function App() {
       <div className="w-[100vw] h-[100vh]">
         <Routes>
           <Route path="/" element={<UserIdentity />} />
+          <Route path="/user/signup" element={<Signup />} />
+          <Route path="/user/login" element={<Login />} />
           <Route path="/routines" element={<CustomerRoutines />} />
           <Route
             path="/admin/Routines"
             element={
-              <PrivateRoute>
+              // <PrivateRoute>
               <AdminRoutines />
-              </PrivateRoute>
+              // </PrivateRoute>
             }
           />
 
           <Route
             path="/admin/routines/:id"
             element={
-              <PrivateRoute>
+              // <PrivateRoute>
               <RoutineDetails />
-              </PrivateRoute>
+              // </PrivateRoute>
             }
           /> {/* Dynamic Route */}
         </Routes>

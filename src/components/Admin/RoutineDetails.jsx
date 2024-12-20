@@ -1,6 +1,7 @@
 import RoutineSidebar from "./RoutineSidebar"
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { LuBadgeCent } from "react-icons/lu";
 
 const RoutineDetails = () => {
     const { id } = useParams();
@@ -10,9 +11,9 @@ const RoutineDetails = () => {
         const fetchRoutine = async () => {
             try {
 
-                const api = import.meta.env.VITE_API_URL
-                // const api_url = `http://localhost:3000/routines/${id}`;
-                const api_url = `${api}/routines/${id}`;
+                // const api = import.meta.env.VITE_API_URL
+                const api_url = `http://localhost:3000/routines/${id}`;
+                // const api_url = `${api}/routines/${id}`;
                 const response = await fetch(api_url, {
                     method: "GET",
                 });
@@ -64,19 +65,45 @@ const RoutineDetails = () => {
                     {routine.benefits && routine.benefits.length > 0 && (
                         <div className="mt-12" id="weekly-benefits">
                             <h2 className="text-4xl font-bold text-purple-700 mb-6">Weekly Benefits</h2>
-                            <ul className="list-disc pl-8 text-lg text-gray-700 space-y-6">
+                            <ul className="list-disc pl-8 text-lg text-gray-700 space-y-12">
                                 {routine.benefits.map((benefit, index) => (
-                                    <li
-                                        key={index}
-                                        className="p-6 bg-pink-100 rounded-xl shadow-lg hover:bg-pink-200 hover:scale-105 transition-all duration-300 transform"
-                                    >
-                                        <p className="text-2xl font-semibold text-purple-800 main1">{`Week ${index + 1}:`}</p>
-                                        <p className="text-xl font-medium text-gray-800">{benefit}</p>
-                                    </li>
+                                    <div key={index} className="flex flex-col items-center justify-center gap-4 w-full">
+                                        <li
+
+                                            className="p-6 w-full bg-pink-100 rounded-xl shadow-lg hover:bg-pink-200 hover:scale-105 transition-all duration-300 transform"
+                                        >
+                                            <p className="text-2xl font-semibold text-purple-800 main1">{`Week ${index + 1}:`}</p>
+                                            <p className="text-xl font-medium text-gray-800">{benefit}</p>
+                                        </li>
+                                        {/* Completed Button for each week */}
+                                        <div className="flex justify-between items-center w-full">
+                                            <button
+                                                className="px-6 py-2 bg-purple-600 text-white text-xl font-semibold rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition-all"
+                                            >
+                                                Completed
+                                            </button>
+
+                                            {/* Show milestones after every 2 weeks if bi-weekly */}
+                                            {routine.milestones === 'Bi-Weekly' ? (index + 1) % 2 === 0 && (
+                                                <div className="flex items-center space-x-2">
+                                                    <LuBadgeCent className="text-green-500 text-2xl" />
+                                                    <span className="text-lg text-gray-800 font-medium">Milestone</span>
+                                                </div>
+                                            ) : (
+                                                // Show milestones after every 1 week if weekly
+                                                <div className="flex items-center space-x-2">
+                                                    <LuBadgeCent className="text-green-500 text-3xl" />
+                                                    <span className="text-xl text-gray-800 font-semibold">Milestone </span>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                    </div>
                                 ))}
                             </ul>
                         </div>
                     )}
+
                     {/* Steps */}
                     {routine.steps && routine.steps.length > 0 && (
                         <div className="mt-12" id="steps">

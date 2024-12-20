@@ -7,21 +7,30 @@ const CustomerRoutines = () => {
   const { allRoutines } = useStateContext()
 
   return (
-    <div className="w-[100vw] h-auto p-8 bg-slate-200">
+    <div className="w-[100vw] h-auto p-4 bg-slate-200">
+      <div
+        className="w-full h-[40vh] bg-cover bg-center rounded-xl shadow-lg flex items-end justify-start"
+        style={{
+          backgroundImage:
+            "url('https://static.canva.com/web/images/4a825d24e6fb578c2ff6061aade52217.jpg')",
+        }}
+      >
+        <div className="text-white mb-4 ml-4 text-center text-xl sm:text-2xl md:text-3xl lg:text-4xl main1 font-extrabold">Effective , Easy to follow Routines</div>
+      </div>
       {/* Your Routines Section */}
       <div className="w-full text-center p-8">
-          <div className={`flex items-center justify-start gap-8 p-6 rounded-lg ${allRoutines.length === 0 ? 'shadow-md' : ''}`}>
-            <div className="text-4xl font-bold main2 text-violet-500">Your Creations</div>
-            {allRoutines.length === 0 ? (
-              <div className="text-zinc-600 text-lg p-4 rounded-full shadow-md bg-gray-200 border border-gray-200 main4">
-                No routines created yet. Click the &ldquo;Create New Routine&ldquo; button to start building your custom routines.
-              </div>
-            ) : ''}
-          </div>
-          {allRoutines.length !== 0 ? (
-            <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {allRoutines.map((routine) => (
-                <Tilt
+        <div className={`flex items-center justify-start gap-8 p-6 rounded-lg ${allRoutines.length === 0 ? 'shadow-md' : ''}`}>
+          <div className="text-4xl font-extrabold main2 text-violet-500 w-full">Get Started Easily</div>
+          {allRoutines.length === 0 ? (
+            <div className="text-zinc-600 text-lg p-4 rounded-full shadow-md bg-gray-200 border border-gray-200 main4">
+              No routines created yet. Click the &ldquo;Create New Routine&ldquo; button to start building your custom routines.
+            </div>
+          ) : ''}
+        </div>
+        {allRoutines.length !== 0 ? (
+          <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {allRoutines.map((routine) => (
+              <Tilt
                 key={routine.id}
                 className="w-full sm:w-[26rem] max-w-[28rem] border border-indigo-300 rounded-2xl hover:shadow-xl hover:shadow-indigo-200 flex flex-col items-center bg-gradient-to-r from-purple-50 to-indigo-50 p-2"
                 tiltMaxAngleX={5}
@@ -48,16 +57,16 @@ const CustomerRoutines = () => {
                   </div>
                   <div className="mt-6 w-full text-center">
                     <Link to={`/admin/routines/${routine.id}`}><button type="button" className="text-white bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 shadow-lg shadow-pink-500/50 dark:shadow-lg dark:shadow-pink-800/80 font-medium rounded-lg text-md px-5 py-2.5 text-center me-2 mb-2">
-                    Get Started
-                  </button></Link>
+                      Get Started
+                    </button></Link>
                   </div>
                 </div>
               </Tilt>
-              ))}
+            ))}
 
-            </div>
-          ) : ''}
-        </div>
+          </div>
+        ) : ''}
+      </div>
     </div>
   )
 }
