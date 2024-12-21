@@ -23,9 +23,9 @@ const AdminRoutines = () => {
   useEffect(() => {
     const fetchEngagementData = async () => {
       try {
-        // const api = import.meta.env.VITE_API_URL
-        const api_url = 'http://localhost:3000/routines/engagement';
-        // const api_url = `${api}/engagement`;
+        const api = import.meta.env.VITE_API_URL
+        // const api_url = 'http://localhost:3000/routines/engagement';
+        const api_url = `${api}/routines/engagement`;
         const response = await fetch(api_url, {
           method: "POST",
         });
