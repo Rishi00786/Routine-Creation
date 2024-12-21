@@ -9,15 +9,14 @@ const RoutineDetails = () => {
     const { id } = useParams();
     const [routine, setRoutine] = useState({});
     const { isAdmin } = useStateContext()
-    const [completedTasks, setCompletedTasks] = useState({});
+    const [completedTasks, setCompletedTasks] = useState([]);
 
     useEffect(() => {
         const fetchRoutine = async () => {
             try {
-
-                const api = import.meta.env.VITE_API_URL
-                // const api_url = `http://localhost:3000/routines/${id}`;
-                const api_url = `${api}/routines/${id}`;
+                // const api = import.meta.env.VITE_API_URL
+                const api_url = `http://localhost:3000/routines/${id}`;
+                // const api_url = `${api}/routines/${id}`;
                 const response = await fetch(api_url, {
                     method: "GET",
                 });
@@ -36,23 +35,68 @@ const RoutineDetails = () => {
         fetchRoutine();
     }, [id]);
 
+    useEffect(() => {
+
+        const fetchCompletedTasks = async () => {
+            const accessToken = localStorage.getItem("access_token");
+            if (!accessToken) return;
+
+            try {
+                const api_url = `http://localhost:3000/routines/${id}/tasks`;
+                const response = await fetch(api_url, {
+                    method: "GET",
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch completed tasks.");
+                }
+
+                const data = await response.json();
+                // console.log(userProgress);
+                setCompletedTasks(data.completedTasks || []);
+            } catch (error) {
+                console.error("Error fetching completed tasks:", error);
+            }
+        };
+
+        fetchCompletedTasks();
+    }, [id])
+
+
     if (!routine || Object.keys(routine).length === 0) {
         return <div>Loading...</div>; // Wait for the data to load
     }
 
-    const handleCompletedWeekTask = (index) => () => {
-        for (let i = 0; i < index; i++) {
-          if (!completedTasks[i]) {
-            alert('Please complete all previous tasks first!');
-            return;
-          }
+    const handleCompletedWeekTask = async (index) => {
+
+        const updatedTasks = [...completedTasks];
+        updatedTasks[index] = !completedTasks[index];
+
+        setCompletedTasks(updatedTasks);
+
+
+        const accessToken = localStorage.getItem("access_token");
+        if (!accessToken) return;
+
+        try {
+            const api_url = `http://localhost:3000/routines/${id}/tasks`;
+            const response = await fetch(api_url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                body: JSON.stringify({ completedTasks: updatedTasks }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to update tasks in backend.");
+            }
+        } catch (error) {
+            console.error("Error updating tasks in backend:", error);
         }
-    
-        setCompletedTasks((prev) => ({
-          ...prev,
-          [index]: !prev[index],
-        }));
-      };
+    };
 
     return (
         <div className="bg-slate-200 w-[100vw] h-auto flex items-start justify-start p-4">
@@ -98,11 +142,12 @@ const RoutineDetails = () => {
                                             <div className="flex justify-between items-center w-full mt-4">
                                                 {/* Completed Button */}
                                                 <button
-                                                    onClick={handleCompletedWeekTask(index)}
+                                                    onClick={() => { handleCompletedWeekTask(index) }}
                                                     className={`px-6 py-2 text-xl font-semibold rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition-all ${completedTasks[index]
-                                                            ? 'bg-green-600 hover:bg-green-700 text-white'
-                                                            : 'bg-purple-600 hover:bg-purple-700 text-white'
+                                                        ? 'bg-green-600 hover:bg-green-700 text-white'
+                                                        : 'bg-purple-600 hover:bg-purple-700 text-white'
                                                         }`}
+                                                    disabled={completedTasks[index]}
                                                 >
                                                     {completedTasks[index] ? 'You have done' : 'Completed'}
                                                 </button>

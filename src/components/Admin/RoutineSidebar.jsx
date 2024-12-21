@@ -1,10 +1,12 @@
 import { FaClock, FaClipboardList, FaInfoCircle, FaStepForward, FaAward, FaTag, FaGithub, FaTwitter, FaInstagram } from "react-icons/fa";
 import { MdArrowBack } from 'react-icons/md';
 import { useNavigate } from "react-router-dom";
+import { useStateContext } from "../../../context";
 
 const RoutineSidebar = () => {
 
     const navigate = useNavigate()
+    const { isAdmin }  = useStateContext()
 
     return (
         <div className="w-full h-full bg-gradient-to-r from-indigo-700 to-purple-600 text-white rounded-[3rem] shadow-2xl flex flex-col items-center justify-start p-8 gap-12">
@@ -45,7 +47,7 @@ const RoutineSidebar = () => {
             <div className="mt-8 w-full flex items-center text-center justify-between gap-8">
                 <div className="flex items-center justify-center gap-4 cursor-pointer">
                     <button
-                        onClick={() => navigate('/admin/routines')}
+                        onClick={() => {isAdmin ? navigate('/admin/routines') : navigate('/routines')}}
                         className="flex items-center font-semibold text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-all duration-300"
                     >
                         <MdArrowBack className="text-3xl mr-2" />

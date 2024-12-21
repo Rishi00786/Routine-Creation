@@ -12,6 +12,11 @@ interface Routine {
     preBuilt?: boolean;
 }
 
+interface UserProgress {
+    complete: boolean;
+    progress: number;
+}
+
 interface StateContextType {
     isAdmin: boolean;
     setIsAdmin: React.Dispatch<React.SetStateAction<boolean>>
@@ -21,6 +26,8 @@ interface StateContextType {
     setPreBuiltRoutines: React.Dispatch<React.SetStateAction<never[]>>
     allRoutines: Routine[];
     setAllRoutines: React.Dispatch<React.SetStateAction<never[]>>
+    myRoutines: Routine[];
+    setMyRoutines: React.Dispatch<React.SetStateAction<never[]>>
 }
 
 const StateContext = createContext<StateContextType | undefined>(undefined);
@@ -39,9 +46,10 @@ export const StateProvider = ({ children }: { children: ReactNode }) => {
     const [yourRoutines, setYourRoutines] = useState([])
     const [preBuiltRoutines, setPreBuiltRoutines] = useState([])
     const [allRoutines, setAllRoutines] = useState([])
+    const [myRoutines, setMyRoutines] = useState([])
 
     return (
-        <StateContext.Provider value={{ isAdmin , setIsAdmin  , yourRoutines , setYourRoutines , setPreBuiltRoutines , preBuiltRoutines , allRoutines , setAllRoutines}}>
+        <StateContext.Provider value={{ isAdmin , setIsAdmin  , yourRoutines , setYourRoutines , setPreBuiltRoutines , preBuiltRoutines , allRoutines , setAllRoutines , setMyRoutines , myRoutines}}>
             {children}
         </StateContext.Provider>
     )

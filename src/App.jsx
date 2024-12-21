@@ -11,15 +11,15 @@ import Login from "./components/Custom/Login";
 
 function App() {
 
-  const { setYourRoutines, setPreBuiltRoutines, setAllRoutines } = useStateContext()
+  const { setYourRoutines, setPreBuiltRoutines, setAllRoutines, myRoutines } = useStateContext()
 
   useEffect(() => {
     const fetchRoutines = async () => {
       try {
 
-        const api = import.meta.env.VITE_API_URL
-        // const api_url = 'http://localhost:3000/routines';
-        const api_url = `${api}/routines`;
+        // const api = import.meta.env.VITE_API_URL
+        const api_url = 'http://localhost:3000/routines';
+        // const api_url = `${api}/routines`;
 
         const response = await fetch(api_url);
 
@@ -30,12 +30,17 @@ function App() {
 
         const data = await response.json()
         // console.log("Fetched routines from DATABASE:", data);
+
+        const filteredRoutines = data.filter(
+          (routine) => !myRoutines.some((myRoutine) => myRoutine.id === routine.id)
+        );
+
         const yourRoutines = data.filter(routine => routine.preBuilt === false);
         const preBuiltRoutines = data.filter(routine => routine.preBuilt === true);
         
         setYourRoutines(yourRoutines);
         setPreBuiltRoutines(preBuiltRoutines);
-        setAllRoutines(data)
+        setAllRoutines(filteredRoutines)
         // console.log("yourRoutines.length",yourRoutines.length)
         // console.log("preBuiltRoutines.length", preBuiltRoutines.length)
       } catch (error) {
@@ -44,7 +49,7 @@ function App() {
     }
 
     fetchRoutines();
-  }, [setAllRoutines, setPreBuiltRoutines, setYourRoutines])
+  }, [myRoutines, setAllRoutines, setPreBuiltRoutines, setYourRoutines])
 
   return (
     <BrowserRouter>
