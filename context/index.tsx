@@ -28,6 +28,8 @@ interface StateContextType {
     setAllRoutines: React.Dispatch<React.SetStateAction<never[]>>
     myRoutines: Routine[];
     setMyRoutines: React.Dispatch<React.SetStateAction<never[]>>
+    sidebar: boolean;
+    setSidebar: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const StateContext = createContext<StateContextType | undefined>(undefined);
@@ -47,9 +49,14 @@ export const StateProvider = ({ children }: { children: ReactNode }) => {
     const [preBuiltRoutines, setPreBuiltRoutines] = useState([])
     const [allRoutines, setAllRoutines] = useState([])
     const [myRoutines, setMyRoutines] = useState([])
+    const [sidebar, setSidebar] = useState(false)
 
     return (
-        <StateContext.Provider value={{ isAdmin , setIsAdmin  , yourRoutines , setYourRoutines , setPreBuiltRoutines , preBuiltRoutines , allRoutines , setAllRoutines , setMyRoutines , myRoutines}}>
+        <StateContext.Provider value={{ 
+            isAdmin, setIsAdmin, yourRoutines, setYourRoutines, setPreBuiltRoutines,
+            preBuiltRoutines, allRoutines, setAllRoutines, setMyRoutines, myRoutines,
+            sidebar , setSidebar
+        }}>
             {children}
         </StateContext.Provider>
     )
