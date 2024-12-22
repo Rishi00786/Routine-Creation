@@ -40,7 +40,9 @@ const UserIdentity = () => {
 
     if (adminId === envAdminId && adminPass === envAdminPass) {
       navigate("/admin/Routines");
-      // console.log(isAdmin);
+      setIsAdmin(true);
+      localStorage.setItem('admin', true);
+      localStorage.removeItem('access_token')
     } else {
       alert("Invalid Admin ID or Password");
     }

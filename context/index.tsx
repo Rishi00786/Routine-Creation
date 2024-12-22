@@ -30,6 +30,10 @@ interface StateContextType {
     setMyRoutines: React.Dispatch<React.SetStateAction<never[]>>
     sidebar: boolean;
     setSidebar: React.Dispatch<React.SetStateAction<boolean>>
+    showRoutineBuilder: boolean;
+    setShowRoutineBuilder: React.Dispatch<React.SetStateAction<boolean>>
+    id: string;
+    setId: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const StateContext = createContext<StateContextType | undefined>(undefined);
@@ -44,18 +48,25 @@ export const useStateContext = () => {
 
 export const StateProvider = ({ children }: { children: ReactNode }) => {
 
-    const [isAdmin, setIsAdmin] = useState(false)
+    const [isAdmin, setIsAdmin] = useState(() => {
+        const admin = localStorage.getItem('admin');
+        return admin === 'true';
+    });    
+
     const [yourRoutines, setYourRoutines] = useState([])
     const [preBuiltRoutines, setPreBuiltRoutines] = useState([])
     const [allRoutines, setAllRoutines] = useState([])
     const [myRoutines, setMyRoutines] = useState([])
     const [sidebar, setSidebar] = useState(false)
+    const [showRoutineBuilder, setShowRoutineBuilder] = useState(false);
+    const [id, setId] = useState("");
+
 
     return (
         <StateContext.Provider value={{ 
             isAdmin, setIsAdmin, yourRoutines, setYourRoutines, setPreBuiltRoutines,
             preBuiltRoutines, allRoutines, setAllRoutines, setMyRoutines, myRoutines,
-            sidebar , setSidebar
+            sidebar, setSidebar, showRoutineBuilder, setShowRoutineBuilder, id, setId
         }}>
             {children}
         </StateContext.Provider>
