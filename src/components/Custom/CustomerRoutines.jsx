@@ -1,15 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { useStateContext } from "../../../context"
 import Tilt from 'react-parallax-tilt';
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { FaChampagneGlasses } from "react-icons/fa6";
-import Loader from "../Home/Loader";
 
 const CustomerRoutines = () => {
 
   const navigate = useNavigate()
   const { myRoutines, setMyRoutines, allRoutines } = useStateContext();
-  const [loading, setLoading] = useState(false);
 
   const handleGetRoutineStarted = async (routineId) => {
     const accessToken = localStorage.getItem("access_token");
@@ -18,7 +16,6 @@ const CustomerRoutines = () => {
       return;
     }
 
-    setLoading(true);
     try {
       const api_url = import.meta.env.VITE_API_URL
       // const api_url = 'http://localhost:3000'
@@ -35,11 +32,9 @@ const CustomerRoutines = () => {
         console.error("Error starting the routine:", response);
         // alert("Failed to start the routine. Please try again.");
       }
-      setLoading(false)
       navigate(`/admin/routines/${routineId}`)
     } catch (error) {
       console.error("Error starting the routine:", error);
-      setLoading(false)
       // alert("An error occurred. Please try again.");
     }
   };
@@ -77,21 +72,18 @@ const CustomerRoutines = () => {
         // const data = text ? JSON.parse(text) : []; // Parse JSON if text exists
         // console.log("data", data); 
         setMyRoutines(data);
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching my routines:", error);
-        setLoading(false);
       }
     };
 
-    setLoading(true);
     fetchMyRoutines();
   }, [navigate, setMyRoutines]);
 
 
   return (
     <>
-      <div className={`w-[100vw] h-auto p-4 bg-slate-200 flex flex-col items-center justify-center gap-8 ${loading && "hidden"}`}>
+      <div className={`w-[100vw] h-auto p-4 bg-slate-200 flex flex-col items-center justify-center gap-8}`}>
         <div
           className="w-full h-[40vh] bg-cover bg-center rounded-xl shadow-lg flex items-end justify-start"
           style={{
@@ -247,11 +239,6 @@ const CustomerRoutines = () => {
         </div>
 
       </div>
-      {loading && (
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <Loader />
-        </div>
-      )}
     </>
   );
 };

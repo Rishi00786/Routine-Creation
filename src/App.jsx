@@ -3,18 +3,15 @@ import UserIdentity from "./components/Home/UserIdentity";
 import AdminRoutines from "./components/Admin/AdminRoutines";
 // import PrivateRoute from "../PrivateRoute";
 import RoutineDetails from "./components/Admin/RoutineDetails";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useStateContext } from "../context";
 import CustomerRoutines from "./components/Custom/CustomerRoutines";
 import Signup from "./components/Custom/Signup";
 import Login from "./components/Custom/Login";
-import Loader from "./components/Home/Loader";
 
 function App() {
 
   const { setYourRoutines, setPreBuiltRoutines, setAllRoutines, myRoutines } = useStateContext()
-
-  const [loading, setLoading] = useState(true);
 
 
   useEffect(() => {
@@ -45,12 +42,10 @@ function App() {
         setYourRoutines(yourRoutines);
         setPreBuiltRoutines(preBuiltRoutines);
         setAllRoutines(filteredRoutines)
-        setLoading(false); // Set loading to false after data is fetched
         // console.log("yourRoutines.length",yourRoutines.length)
         // console.log("preBuiltRoutines.length", preBuiltRoutines.length)
       } catch (error) {
         console.error("Error fetching the routines from DATABASE", error)
-        setLoading(false); // Set loading to false in case of an error
       }
     }
 
@@ -60,11 +55,6 @@ function App() {
   return (
     <BrowserRouter>
       <div className="w-[100vw] h-[100vh]">
-        {loading ? (
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            <Loader />
-          </div>
-        ) : (
           <Routes>
             <Route path="/" element={<UserIdentity />} />
             <Route path="/user/signup" element={<Signup />} />
@@ -88,7 +78,6 @@ function App() {
               }
             /> {/* Dynamic Route */}
           </Routes>
-        )}
       </div>
     </BrowserRouter >
   );
