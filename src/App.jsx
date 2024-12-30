@@ -17,7 +17,7 @@ function App() {
   useEffect(() => {
     const fetchRoutines = async () => {
       try {
-
+// test
         const api = import.meta.env.VITE_API_URL
         // const api_url = 'http://localhost:3000/routines';
         const api_url = `${api}/routines`;
