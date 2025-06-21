@@ -1,7 +1,7 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import UserIdentity from "./components/Home/UserIdentity";
 import AdminRoutines from "./components/Admin/AdminRoutines";
-// import PrivateRoute from "../PrivateRoute";
+import PrivateRoute from "../PrivateRoute";
 import RoutineDetails from "./components/Admin/RoutineDetails";
 import { useEffect } from "react";
 import { useStateContext } from "../context";
@@ -63,18 +63,18 @@ function App() {
             <Route
               path="/admin/Routines"
               element={
-                // <PrivateRoute>
+                <PrivateRoute>
                 <AdminRoutines />
-                // </PrivateRoute>
+                </PrivateRoute>
               }
             />
 
             <Route
               path="/admin/routines/:id"
               element={
-                // <PrivateRoute>
+                <PrivateRoute>
                 <RoutineDetails />
-                // </PrivateRoute>
+                </PrivateRoute>
               }
             /> {/* Dynamic Route */}
           </Routes>
