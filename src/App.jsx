@@ -72,9 +72,9 @@ function App() {
             <Route
               path="/admin/routines/:id"
               element={
-                <PrivateRoute>
+                // <PrivateRoute>
                 <RoutineDetails />
-                </PrivateRoute>
+                // </PrivateRoute>
               }
             /> {/* Dynamic Route */}
           </Routes>
